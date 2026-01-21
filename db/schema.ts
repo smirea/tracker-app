@@ -5,6 +5,7 @@ export const entries = sqliteTable("entries", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   content: text("content"), // optional text memo
   energyLevel: integer("energy_level"), // 1-10 scale
+  moodLevel: integer("mood_level"), // 1-10 scale
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   // Location data
   latitude: real("latitude"),

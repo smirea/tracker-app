@@ -8,6 +8,7 @@ export type EntryWithTags = Entry & { tags: Tag[] };
 export type CreateEntryInput = {
   content?: string;
   energyLevel?: number;
+  moodLevel?: number;
   latitude?: number;
   longitude?: number;
   locationName?: string;
@@ -68,6 +69,7 @@ export function useEntries() {
         localId,
         content: input.content || null,
         energyLevel: input.energyLevel || null,
+        moodLevel: input.moodLevel || null,
         latitude: input.latitude || null,
         longitude: input.longitude || null,
         locationName: input.locationName || null,

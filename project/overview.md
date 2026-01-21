@@ -21,7 +21,7 @@ Think of this as a social media app with 1 single user. I want to be able to tra
 		- [x] show list of existing tags (sorted by name)
 		- [x] allow create new tags (typing filters list)
 	- [x] energy levels - slider from 1 (low) to 10 (high) [task](./2026-01-20__feat__energy-levels.md)
-	- [ ] mood - slider 1 to 10
+	- [x] mood - slider 1 to 10 [task](./2026-01-21__feat__mood-slider.md)
 2. analytics
 	- [ ] tbd
 3. architecture

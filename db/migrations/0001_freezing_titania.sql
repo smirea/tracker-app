@@ -1,0 +1,1 @@
+ALTER TABLE `entries` ADD `mood_level` integer;

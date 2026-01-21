@@ -23,6 +23,7 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { TagSelector } from "@/components/TagSelector";
 import { EnergySlider } from "@/components/EnergySlider";
+import { MoodSlider } from "@/components/MoodSlider";
 import { useTags } from "@/hooks/useTags";
 import { useEntries, type EntryWithTags } from "@/hooks/useEntries";
 import { useLocation } from "@/hooks/useLocation";
@@ -36,6 +37,7 @@ export default function App() {
   const { getCurrentLocation, isLoading: locationLoading, hasPermission } = useLocation();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
+  const [moodLevel, setMoodLevel] = useState<number | null>(null);
   const [showTagSelector, setShowTagSelector] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -54,12 +56,14 @@ export default function App() {
       await createEntry({
         tagIds: selectedTags.map((t) => t.id),
         energyLevel: energyLevel ?? undefined,
+        moodLevel: moodLevel ?? undefined,
         latitude: location?.latitude,
         longitude: location?.longitude,
         locationName: location?.locationName,
       });
       setSelectedTags([]);
       setEnergyLevel(null);
+      setMoodLevel(null);
     } finally {
       setIsCreating(false);
     }
@@ -135,6 +139,8 @@ export default function App() {
 
                     <EnergySlider value={energyLevel} onChange={setEnergyLevel} />
 
+                    <MoodSlider value={moodLevel} onChange={setMoodLevel} />
+
                     {selectedTags.length > 0 ? (
                       <HStack space="sm" className="flex-wrap">
                         {selectedTags.map((tag) => (
@@ -165,6 +171,7 @@ export default function App() {
                         size="sm"
                         onPress={handleLogEntry}
                         isDisabled={isCreating || locationLoading}
+                        testID="log-entry-button"
                       >
                         <ButtonText>
                           {isCreating ? "Logging..." : "Log Entry"}
@@ -213,7 +220,24 @@ export default function App() {
                                     }`}
                                   >
                                     <Text className="text-xs text-typography-0 font-medium">
-                                      {item.energyLevel}/10
+                                      E:{item.energyLevel}
+                                    </Text>
+                                  </Box>
+                                )}
+                                {item.moodLevel !== null && (
+                                  <Box
+                                    className={`px-2 py-0.5 rounded ${
+                                      item.moodLevel <= 3
+                                        ? 'bg-purple-500'
+                                        : item.moodLevel <= 5
+                                        ? 'bg-indigo-500'
+                                        : item.moodLevel <= 7
+                                        ? 'bg-amber-500'
+                                        : 'bg-orange-500'
+                                    }`}
+                                  >
+                                    <Text className="text-xs text-typography-0 font-medium">
+                                      M:{item.moodLevel}
                                     </Text>
                                   </Box>
                                 )}

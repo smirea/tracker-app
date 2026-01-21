@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Platform } from 'react-native';
 import * as Location from 'expo-location';
 
 export type LocationData = {
@@ -53,21 +54,23 @@ export function useLocation() {
         longitude: position.coords.longitude,
       };
 
-      // Try to get location name via reverse geocoding (with timeout)
-      try {
-        const [place] = await withTimeout(
-          Location.reverseGeocodeAsync({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          }),
-          5000
-        );
-        if (place) {
-          const parts = [place.name, place.city, place.region].filter(Boolean);
-          locationData.locationName = parts.join(', ') || undefined;
+      // Try to get location name via reverse geocoding (skip on web - API removed in SDK 49)
+      if (Platform.OS !== 'web') {
+        try {
+          const [place] = await withTimeout(
+            Location.reverseGeocodeAsync({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            }),
+            5000
+          );
+          if (place) {
+            const parts = [place.name, place.city, place.region].filter(Boolean);
+            locationData.locationName = parts.join(', ') || undefined;
+          }
+        } catch {
+          // Reverse geocoding failed, continue without location name
         }
-      } catch {
-        // Reverse geocoding failed, continue without location name
       }
 
       setLocation(locationData);

@@ -16,7 +16,7 @@ Think of this as a social media app with 1 single user. I want to be able to tra
 
 ## Features:
 1. interactions
-	- [ ] each interaction has date and location associated with it automatically
+	- [x] each interaction has date and location associated with it automatically [task](./2026-01-20__feat__date-location.md)
 	- [x] tags. store and autosuggest for each as they get created (example "started taking trazodone" or "traveled on a plane") [task](./2026-01-20__feat__tags.md)
 		- [x] show list of existing tags (sorted by name)
 		- [x] allow create new tags (typing filters list)

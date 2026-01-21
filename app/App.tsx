@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, SafeAreaView } from "react-native";
+import { ActivityIndicator, SafeAreaView, FlatList } from "react-native";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { db } from "./db/client";
 import migrations from "../db/migrations/migrations";
@@ -13,14 +13,19 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { TagSelector } from "@/components/TagSelector";
 import { useTags } from "@/hooks/useTags";
+import { useEntries, type EntryWithTags } from "@/hooks/useEntries";
+import { useLocation } from "@/hooks/useLocation";
 import type { Tag } from "@db/schema";
 import "@/global.css";
 
 export default function App() {
   const { success, error: migrationError } = useMigrations(db, migrations);
   const { tags, isLoading: tagsLoading, createTag } = useTags();
+  const { entries, isLoading: entriesLoading, createEntry, refresh: refreshEntries } = useEntries();
+  const { getCurrentLocation, isLoading: locationLoading, hasPermission } = useLocation();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [showTagSelector, setShowTagSelector] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const handleTagSelect = (tag: Tag) => {
     setSelectedTags((prev) => [...prev, tag]);
@@ -28,6 +33,31 @@ export default function App() {
 
   const handleTagDeselect = (tag: Tag) => {
     setSelectedTags((prev) => prev.filter((t) => t.id !== tag.id));
+  };
+
+  const handleLogEntry = async () => {
+    setIsCreating(true);
+    try {
+      const location = await getCurrentLocation();
+      await createEntry({
+        tagIds: selectedTags.map((t) => t.id),
+        latitude: location?.latitude,
+        longitude: location?.longitude,
+        locationName: location?.locationName,
+      });
+      setSelectedTags([]);
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
   };
 
   if (migrationError) {
@@ -83,31 +113,100 @@ export default function App() {
                 onCreateTag={createTag}
               />
             ) : (
-              <VStack space="md" className="flex-1 justify-center items-center">
-                <Text className="text-typography-500">
-                  {selectedTags.length > 0
-                    ? `${selectedTags.length} tag(s) selected`
-                    : "No tags selected"}
-                </Text>
+              <VStack space="md" className="flex-1">
+                {/* New entry section */}
+                <Box className="bg-background-50 p-4 rounded-lg">
+                  <VStack space="sm">
+                    <Text className="text-typography-700 font-medium">New Entry</Text>
 
-                <HStack space="md" className="mt-4">
-                  <Button action="primary" size="md" onPress={() => setShowTagSelector(true)}>
-                    <ButtonText>Select Tags</ButtonText>
-                  </Button>
-                </HStack>
+                    {selectedTags.length > 0 ? (
+                      <HStack space="sm" className="flex-wrap">
+                        {selectedTags.map((tag) => (
+                          <Box
+                            key={tag.id}
+                            className="bg-primary-500 px-3 py-1 rounded-full mb-1"
+                          >
+                            <Text className="text-sm text-typography-0">{tag.name}</Text>
+                          </Box>
+                        ))}
+                      </HStack>
+                    ) : (
+                      <Text className="text-typography-400 text-sm">No tags selected</Text>
+                    )}
 
-                {selectedTags.length > 0 && (
-                  <HStack space="sm" className="flex-wrap mt-4 justify-center">
-                    {selectedTags.map((tag) => (
-                      <Box
-                        key={tag.id}
-                        className="bg-primary-500 px-3 py-1.5 rounded-full mb-2"
+                    <HStack space="sm" className="mt-2">
+                      <Button
+                        action="secondary"
+                        variant="outline"
+                        size="sm"
+                        onPress={() => setShowTagSelector(true)}
                       >
-                        <Text className="text-sm text-typography-0">{tag.name}</Text>
-                      </Box>
-                    ))}
-                  </HStack>
-                )}
+                        <ButtonText>{selectedTags.length > 0 ? "Edit Tags" : "Add Tags"}</ButtonText>
+                      </Button>
+
+                      <Button
+                        action="primary"
+                        size="sm"
+                        onPress={handleLogEntry}
+                        isDisabled={isCreating || locationLoading}
+                      >
+                        <ButtonText>
+                          {isCreating ? "Logging..." : "Log Entry"}
+                        </ButtonText>
+                      </Button>
+                    </HStack>
+
+                    {hasPermission === false && (
+                      <Text className="text-warning-500 text-xs mt-1">
+                        Location permission denied - entries will be saved without location
+                      </Text>
+                    )}
+                  </VStack>
+                </Box>
+
+                {/* Recent entries */}
+                <VStack space="sm" className="flex-1">
+                  <Text className="text-typography-700 font-medium">Recent Entries</Text>
+
+                  {entriesLoading ? (
+                    <ActivityIndicator size="small" color="#007AFF" />
+                  ) : entries.length === 0 ? (
+                    <Text className="text-typography-400 text-sm">No entries yet</Text>
+                  ) : (
+                    <FlatList
+                      data={entries}
+                      keyExtractor={(item) => item.localId}
+                      renderItem={({ item }) => (
+                        <Box className="bg-background-50 p-3 rounded-lg mb-2">
+                          <HStack className="justify-between items-start">
+                            <VStack space="xs" className="flex-1">
+                              <Text className="text-typography-500 text-xs">
+                                {formatDate(item.createdAt)}
+                              </Text>
+                              {item.locationName && (
+                                <Text className="text-typography-400 text-xs">
+                                  {item.locationName}
+                                </Text>
+                              )}
+                              {item.tags.length > 0 && (
+                                <HStack space="xs" className="flex-wrap mt-1">
+                                  {item.tags.map((tag) => (
+                                    <Box
+                                      key={tag.id}
+                                      className="bg-primary-600 px-2 py-0.5 rounded-full mb-1"
+                                    >
+                                      <Text className="text-xs text-typography-0">{tag.name}</Text>
+                                    </Box>
+                                  ))}
+                                </HStack>
+                              )}
+                            </VStack>
+                          </HStack>
+                        </Box>
+                      )}
+                    />
+                  )}
+                </VStack>
               </VStack>
             )}
           </VStack>

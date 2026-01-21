@@ -129,9 +129,11 @@ tracker/
 │   └── migrations/          # Generated Drizzle migrations
 ├── app/                     # Expo mobile app
 │   ├── App.tsx              # Main application entry
+│   ├── components/ui/       # gluestack-ui components
 │   ├── db/
 │   │   └── client.ts        # expo-sqlite client
-│   ├── metro.config.js      # Metro bundler config
+│   ├── global.css           # Tailwind CSS entry
+│   ├── tailwind.config.js   # Tailwind configuration
 │   └── package.json
 ├── server/                  # Server scripts/tooling
 │   └── db/
@@ -144,6 +146,7 @@ tracker/
 
 - **Runtime**: [Bun](https://bun.sh)
 - **Framework**: [Expo](https://expo.dev) (React Native)
+- **UI**: [gluestack-ui](https://gluestack.io) with NativeWind (Tailwind CSS)
 - **Database**: [SQLite](https://docs.expo.dev/versions/latest/sdk/sqlite/) via expo-sqlite
 - **ORM**: [Drizzle](https://orm.drizzle.team)
 - **Cloud Sync**: [Turso](https://turso.tech) (optional)

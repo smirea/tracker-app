@@ -8,6 +8,7 @@ Personal iOS tracking app for logging daily metrics (energy, tags, memos, images
 
 - **Runtime**: Bun (not Node.js)
 - **Framework**: Expo (React Native)
+- **UI**: gluestack-ui with NativeWind (Tailwind CSS)
 - **Database**: expo-sqlite with Drizzle ORM
 - **Cloud Sync**: Turso (optional, for remote sync)
 
@@ -38,3 +39,5 @@ bun run start        # Start Expo dev server
 - Offline-first: all data stored locally in SQLite
 - Migrations run automatically on app start via `useMigrations` hook
 - Location and timestamp added automatically to entries
+- Use gluestack-ui components with Tailwind classes for styling
+- Add new UI components: `npx gluestack-ui add --use-bun <component>`

@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:dev": "turso dev --db-file ./local.db --port 8080",
+    "db:push": "drizzle-kit push --dialect turso --schema ./db/schema.ts --url http://127.0.0.1:8080"
   },
   "devDependencies": {
+    "@libsql/client": "^0.17.0",
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1"
   }

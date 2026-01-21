@@ -26,4 +26,4 @@ Think of this as a social media app with 1 single user. I want to be able to tra
 	- [ ] tbd
 3. architecture
 	- [ ] use async db
-	- [ ] setup turso for local development
+	- [x] setup turso for local development [task](./2026-01-21__arch__turso-local-dev.md)

@@ -24,4 +24,6 @@ Think of this as a social media app with 1 single user. I want to be able to tra
 	- [ ] mood - slider 1 to 10
 2. analytics
 	- [ ] tbd
-
+3. architecture
+	- [ ] use async db
+	- [ ] setup turso for local development

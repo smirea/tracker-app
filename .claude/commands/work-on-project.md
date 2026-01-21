@@ -2,7 +2,7 @@
 description: work on the next most important feature and commit
 ---
 
-1. read [./project/overview](./project/overview.md) for goals and tasks
+1. read @./project/overview.md for goals and tasks
 2. pick a single todo from there, it must be the most important unfinished item
 3. create a file under `./project` named `<date>__<type>__<name>.md` (example `2026-01-22__feat__add-analytics.md`). Reference this file in the overview todo line
 3.1. That file is for you to track your work and remember important learnings across time. It must have the following format:
@@ -22,5 +22,6 @@ Examples of bad learnings (redundant, simplistic, answers that could be found by
 - used the same pattern for my new button as existing one
 - tests passed, build passed
 ```
-4. Continue iterating until done. update the task file as needed
-5. Once done, mark the todo as complete and then commit your changes using the `gai` command line (it's a special alias for `git commit -m`)
+4. Check your work in chrome by running `bunx start --chrome` in the `@app/` folder
+5. Continue iterating until done. update the task file as needed
+6. Once done, mark the todo as complete and then commit your changes using the `gai` command line (it's a special alias for `git commit -m`)

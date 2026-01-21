@@ -20,7 +20,7 @@ Think of this as a social media app with 1 single user. I want to be able to tra
 	- [x] tags. store and autosuggest for each as they get created (example "started taking trazodone" or "traveled on a plane") [task](./2026-01-20__feat__tags.md)
 		- [x] show list of existing tags (sorted by name)
 		- [x] allow create new tags (typing filters list)
-	- [ ] energy levels - slider from 1 (low) to 10 (high)
+	- [x] energy levels - slider from 1 (low) to 10 (high) [task](./2026-01-20__feat__energy-levels.md)
 	- [ ] mood - slider 1 to 10
 2. analytics
 	- [ ] tbd

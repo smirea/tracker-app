@@ -12,6 +12,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { TagSelector } from "@/components/TagSelector";
+import { EnergySlider } from "@/components/EnergySlider";
 import { useTags } from "@/hooks/useTags";
 import { useEntries, type EntryWithTags } from "@/hooks/useEntries";
 import { useLocation } from "@/hooks/useLocation";
@@ -24,6 +25,7 @@ export default function App() {
   const { entries, isLoading: entriesLoading, createEntry, refresh: refreshEntries } = useEntries();
   const { getCurrentLocation, isLoading: locationLoading, hasPermission } = useLocation();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [showTagSelector, setShowTagSelector] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -41,11 +43,13 @@ export default function App() {
       const location = await getCurrentLocation();
       await createEntry({
         tagIds: selectedTags.map((t) => t.id),
+        energyLevel: energyLevel ?? undefined,
         latitude: location?.latitude,
         longitude: location?.longitude,
         locationName: location?.locationName,
       });
       setSelectedTags([]);
+      setEnergyLevel(null);
     } finally {
       setIsCreating(false);
     }
@@ -119,6 +123,8 @@ export default function App() {
                   <VStack space="sm">
                     <Text className="text-typography-700 font-medium">New Entry</Text>
 
+                    <EnergySlider value={energyLevel} onChange={setEnergyLevel} />
+
                     {selectedTags.length > 0 ? (
                       <HStack space="sm" className="flex-wrap">
                         {selectedTags.map((tag) => (
@@ -180,9 +186,28 @@ export default function App() {
                         <Box className="bg-background-50 p-3 rounded-lg mb-2">
                           <HStack className="justify-between items-start">
                             <VStack space="xs" className="flex-1">
-                              <Text className="text-typography-500 text-xs">
-                                {formatDate(item.createdAt)}
-                              </Text>
+                              <HStack space="sm" className="items-center">
+                                <Text className="text-typography-500 text-xs">
+                                  {formatDate(item.createdAt)}
+                                </Text>
+                                {item.energyLevel !== null && (
+                                  <Box
+                                    className={`px-2 py-0.5 rounded ${
+                                      item.energyLevel <= 3
+                                        ? 'bg-error-500'
+                                        : item.energyLevel <= 5
+                                        ? 'bg-warning-500'
+                                        : item.energyLevel <= 7
+                                        ? 'bg-info-500'
+                                        : 'bg-success-500'
+                                    }`}
+                                  >
+                                    <Text className="text-xs text-typography-0 font-medium">
+                                      {item.energyLevel}/10
+                                    </Text>
+                                  </Box>
+                                )}
+                              </HStack>
                               {item.locationName && (
                                 <Text className="text-typography-400 text-xs">
                                   {item.locationName}

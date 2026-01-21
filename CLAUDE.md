@@ -10,27 +10,6 @@ Personal iOS tracking app for logging daily metrics (energy, tags, memos, images
 - **Database**: expo-sqlite with Drizzle ORM
 - **Cloud Sync**: Turso (optional, for remote sync)
 
-## Commands
-
-```bash
-# From tracker root
-bun install          # Install root dependencies
-bun run db:generate  # Generate migrations after schema changes
-bun run db:studio    # Open Drizzle Studio
-
-# From tracker/app
-bunx start --chrome        # Start Expo dev server with chrome browser
-bunx start                 # Start Expo dev server with no client
-```
-
-## Key Files
-
-- `db/schema.ts` - Database schema (single source of truth)
-- `db/migrations/` - Generated Drizzle migrations
-- `app/db/client.ts` - Expo app's Drizzle client (expo-sqlite)
-- `server/db/client.ts` - Server's Drizzle client (@libsql/client)
-- `drizzle.config.ts` - Drizzle configuration (root level)
-
 ## Conventions
 
 - Use Bun APIs over Node.js equivalents
@@ -39,3 +18,4 @@ bunx start                 # Start Expo dev server with no client
 - Location and timestamp added automatically to entries
 - Use gluestack-ui components with Tailwind classes for styling
 - Add new UI components: `npx gluestack-ui add --use-bun <component>`
+- Use `testID=<id>` tags on components as you add them to make testing easier

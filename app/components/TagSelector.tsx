@@ -6,7 +6,7 @@ import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { Input, InputField } from '@/components/ui/input';
 import { Button, ButtonText } from '@/components/ui/button';
-import type { Tag } from '../../db/schema';
+import type { Tag } from '@db/schema';
 
 interface TagSelectorProps {
   tags: Tag[];

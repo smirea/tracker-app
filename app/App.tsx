@@ -13,7 +13,7 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { TagSelector } from "@/components/TagSelector";
 import { useTags } from "@/hooks/useTags";
-import type { Tag } from "../db/schema";
+import type { Tag } from "@db/schema";
 import "@/global.css";
 
 export default function App() {

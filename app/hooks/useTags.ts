@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { db } from '@/db/client';
-import { tags } from '../../db/schema';
-import type { Tag, NewTag } from '../../db/schema';
+import { tags } from '@db/schema';
+import type { Tag, NewTag } from '@db/schema';
 import { eq, asc } from 'drizzle-orm';
 
 export function useTags() {

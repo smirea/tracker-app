@@ -25,5 +25,5 @@ Think of this as a social media app with 1 single user. I want to be able to tra
 2. analytics
 	- [ ] tbd
 3. architecture
-	- [ ] use async db
 	- [x] setup turso for local development [task](./2026-01-21__arch__turso-local-dev.md)
+	- [x] use proper database always (no mock) both in app and web mode, no special cases [task](./2026-01-21__arch__unified-database.md)

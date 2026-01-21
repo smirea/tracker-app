@@ -4,12 +4,13 @@ import { ActivityIndicator, SafeAreaView, FlatList, Platform } from "react-nativ
 import { db } from "./db/client";
 
 // Conditionally import migrations only for native
+// Web uses Turso server which has schema pushed via drizzle-kit
 const useMigrationsCompat = () => {
   if (Platform.OS === "web") {
-    // Web uses mock db, no migrations needed
+    // Web connects to Turso server - schema is managed via drizzle-kit push
     return { success: true, error: null };
   }
-  // Native: use real migrations
+  // Native: use expo-sqlite migrations
   const { useMigrations } = require("drizzle-orm/expo-sqlite/migrator");
   const migrations = require("../db/migrations/migrations").default;
   return useMigrations(db, migrations);

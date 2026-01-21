@@ -7,9 +7,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.8"
-  },
-  "dependencies": {
+    "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1"
   }
 }

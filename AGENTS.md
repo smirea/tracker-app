@@ -1,4 +1,16 @@
-# Agents
+# Your behavior
+1. read [./project/overview](./project/overview.md) for goals and tasks
+2. when you start work on a new feature/issue/bug, create a file under `./project` named `<date>__<type>__<name>.md` (example `2026-01-22__feat__add-analytics.md`).
+2.1. That file is for you to track your work and remember important learnings across time. It must have the following below
+
+```md
+# Task
+[brief description of this task]
+
+# Learnings
+[things that are worth remembembering that are not obvious like research that was needed, why decisions were made, what was tried but did not work, trade-offs. concise bullet points]
+```
+
 
 ## Project Overview
 

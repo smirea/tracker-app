@@ -1,10 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Platform } from 'react-native';
 import * as Location from 'expo-location';
 
 export type LocationData = {
   latitude: number;
   longitude: number;
   locationName?: string;
+};
+
+// Timeout helper
+const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error('Location request timed out')), ms)
+  );
+  return Promise.race([promise, timeout]);
 };
 
 export function useLocation() {
@@ -16,6 +25,11 @@ export function useLocation() {
   // Request permissions on mount
   useEffect(() => {
     (async () => {
+      // Skip location permission on web for testing
+      if (Platform.OS === 'web') {
+        setHasPermission(false);
+        return;
+      }
       const { status } = await Location.requestForegroundPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
@@ -23,6 +37,11 @@ export function useLocation() {
 
   // Get current location
   const getCurrentLocation = useCallback(async (): Promise<LocationData | null> => {
+    // Skip location on web - return null immediately
+    if (Platform.OS === 'web') {
+      return null;
+    }
+
     if (hasPermission === false) {
       setError('Location permission denied');
       return null;
@@ -32,21 +51,28 @@ export function useLocation() {
       setIsLoading(true);
       setError(null);
 
-      const position = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
+      // Add 10 second timeout to prevent hanging
+      const position = await withTimeout(
+        Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        }),
+        10000
+      );
 
       const locationData: LocationData = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
 
-      // Try to get location name via reverse geocoding
+      // Try to get location name via reverse geocoding (with timeout)
       try {
-        const [place] = await Location.reverseGeocodeAsync({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
+        const [place] = await withTimeout(
+          Location.reverseGeocodeAsync({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }),
+          5000
+        );
         if (place) {
           const parts = [place.name, place.city, place.region].filter(Boolean);
           locationData.locationName = parts.join(', ') || undefined;

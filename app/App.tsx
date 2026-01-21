@@ -1,9 +1,19 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, SafeAreaView, FlatList } from "react-native";
-import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import { ActivityIndicator, SafeAreaView, FlatList, Platform } from "react-native";
 import { db } from "./db/client";
-import migrations from "../db/migrations/migrations";
+
+// Conditionally import migrations only for native
+const useMigrationsCompat = () => {
+  if (Platform.OS === "web") {
+    // Web uses mock db, no migrations needed
+    return { success: true, error: null };
+  }
+  // Native: use real migrations
+  const { useMigrations } = require("drizzle-orm/expo-sqlite/migrator");
+  const migrations = require("../db/migrations/migrations").default;
+  return useMigrations(db, migrations);
+};
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { Box } from "@/components/ui/box";
@@ -20,7 +30,7 @@ import type { Tag } from "@db/schema";
 import "@/global.css";
 
 export default function App() {
-  const { success, error: migrationError } = useMigrations(db, migrations);
+  const { success, error: migrationError } = useMigrationsCompat();
   const { tags, isLoading: tagsLoading, createTag } = useTags();
   const { entries, isLoading: entriesLoading, createEntry, refresh: refreshEntries } = useEntries();
   const { getCurrentLocation, isLoading: locationLoading, hasPermission } = useLocation();

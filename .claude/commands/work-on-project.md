@@ -13,15 +13,20 @@ description: work on the next most important feature and commit
 
 # Learnings
 [things that are worth remembembering that are not obvious like research that was needed, why decisions were made, what was tried but did not work, trade-offs. concise bullet points. these learnings are exclusively to this feature]
-Examples of good learnings for a a fictional feature to create an analytics dashboard (specific, concise, outline decisions and information that's not part of the codebase)
+```
+
+<good-examples-of-learnings reason="specific, concise, outline decisions and information that's not part of the codebase">
 - there was no chart library, analyzed option A, B and C, decided to go with option B as it was most relevant to requirements X Y
 - had to upgrade to react v42 for improved hook performance
-- tried using existing /analyze endpoint but it was too slow, created /analyze/my-feature endpoint
-Examples of bad learnings (redundant, simplistic, answers that could be found by reading the code, detailing actions you took)
+- tried using existing `/analyze` endpoint but it was too slow, created `/analyze/my-feature` endpoint
+</good-examples-of-learnings>
+<bad-examples-of-learnings reason="redundant, simplistic, answers that could be found by reading the code, detailing actions you took">
+- react is version 69 already
 - the database existed and had what i needed
 - used the same pattern for my new button as existing one
 - tests passed, build passed
-```
+</bad-examples-of-learnings>
+
 4. Check your work in chrome by running `bunx start --chrome` in the `@app/` folder
 5. Continue iterating until done. update the task file as needed
 6. Once done, mark the todo as complete and then commit your changes using the `gai` command line (it's a special alias for `git commit -m`)

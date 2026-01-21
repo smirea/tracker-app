@@ -2,6 +2,10 @@
 
 Personal iOS tracking app for logging daily metrics (energy, tags, memos, images, voice notes) with automatic timestamps and location.
 
+The overview of the project is under @./project/overview.md
+
+There is a file for every feature implemented under @./project with additional context for that feature
+
 ## Tech Stack
 
 - **Runtime**: Bun (not Node.js)

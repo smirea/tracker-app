@@ -26,15 +26,17 @@ import { TagSelector } from "@/components/TagSelector";
 import { EnergySlider } from "@/components/EnergySlider";
 import { MoodSlider } from "@/components/MoodSlider";
 import { useTags } from "@/hooks/useTags";
-import { useEntries, type EntryWithTags } from "@/hooks/useEntries";
+import { useEntries } from "@/hooks/useEntries";
 import { useLocation } from "@/hooks/useLocation";
+import { useFonts } from "@/hooks/useFonts";
 import type { Tag } from "@db/schema";
 import "@/global.css";
 
 export default function App() {
+  const { loaded: fontsLoaded, error: fontError } = useFonts();
   const { success, error: migrationError } = useMigrationsCompat();
   const { tags, isLoading: tagsLoading, createTag } = useTags();
-  const { entries, isLoading: entriesLoading, createEntry, refresh: refreshEntries } = useEntries();
+  const { entries, isLoading: entriesLoading, createEntry } = useEntries();
   const { getCurrentLocation, isLoading: locationLoading, hasPermission } = useLocation();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
@@ -79,6 +81,19 @@ export default function App() {
     });
   };
 
+  if (fontError) {
+    return (
+      <GluestackUIProvider mode="dark">
+        <Box className="flex-1 items-center justify-center bg-background-0 p-5">
+          <Text className="text-error-500 text-center">
+            Font loading error: {fontError.message}
+          </Text>
+          <StatusBar style="auto" />
+        </Box>
+      </GluestackUIProvider>
+    );
+  }
+
   if (migrationError) {
     return (
       <GluestackUIProvider mode="dark">
@@ -92,7 +107,7 @@ export default function App() {
     );
   }
 
-  if (!success || tagsLoading) {
+  if (!fontsLoaded || !success || tagsLoading) {
     return (
       <GluestackUIProvider mode="dark">
         <Box className="flex-1 items-center justify-center bg-background-0 p-5">

@@ -17,6 +17,9 @@ module.exports = {
     },
   ],
   theme: {
+    fontFamily: {
+      sans: ['GoogleSansFlex-Regular', 'system-ui', 'sans-serif'],
+    },
     extend: {
       colors: {
         primary: {
@@ -175,9 +178,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        heading: undefined,
-        body: undefined,
+        heading: ['GoogleSansFlex-SemiBold', 'system-ui', 'sans-serif'],
+        body: ['GoogleSansFlex-Regular', 'system-ui', 'sans-serif'],
         mono: undefined,
+        sans: ['GoogleSansFlex-Regular', 'system-ui', 'sans-serif'],
         jakarta: ['var(--font-plus-jakarta-sans)'],
         roboto: ['var(--font-roboto)'],
         code: ['var(--font-source-code-pro)'],
